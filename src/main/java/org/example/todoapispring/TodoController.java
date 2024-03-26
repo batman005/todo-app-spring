@@ -11,19 +11,22 @@ import java.util.List;
 @RequestMapping("/api/v1/todos")
 public class TodoController {
 
-    private static List<Todo> todosList;
+    private static List<Todo> todoList;
+    private static final String TODO_NOT_FOUND = "Todo not found";
 
     public TodoController(){
-        todosList = new ArrayList<>();
-        todosList.add(new Todo(1, false, "Todo 1", 1));
-        todosList.add(new Todo(2, true, "Todo 2", 2 ));
+        todoList = new ArrayList<>();
+        todoList.add(new Todo(1, false, "Todo 1", 1));
+        todoList.add(new Todo(2, true, "Todo 2", 2 ));
     }
 
+    //getting todo data
     @GetMapping
     public ResponseEntity<List<Todo>> getTodos() {
-        return ResponseEntity.ok(todosList);
+        return ResponseEntity.ok(todoList);
     }
 
+    //making a new todo
     @PostMapping
     public ResponseEntity<Todo> createTodo(@RequestBody Todo newTodo) {
 
@@ -31,18 +34,22 @@ public class TodoController {
          * we can use this annotation to set the status code @ResponseStatus(HttpStatus.CREATED)
          *
          */
-        todosList.add(newTodo);
+        todoList.add(newTodo);
         return ResponseEntity.status(HttpStatus.CREATED).body(newTodo);
     }
 
+    //getting a particular task
     @GetMapping("/{todoId}")
-    public ResponseEntity<Todo> getTodoById(@PathVariable Long todoId) {
-        for (Todo todo : todosList) {
+    public ResponseEntity<?> getTodoById(@PathVariable Long todoId) {
+        for (Todo todo : todoList) {
             if (todo.getId() == todoId) {
                 return ResponseEntity.ok(todo);
             }
         }
         // HW: Along with 404 status code, try to send a json {message: Todo not found}
-        return ResponseEntity.notFound().build();
+        //try to send custom a json message Todo not found
+
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(TODO_NOT_FOUND);
     }
 }

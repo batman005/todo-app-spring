@@ -6,6 +6,7 @@ public class Todo {
     private String title;
     private int userId;
 
+//  basic constructor for this class
     public Todo(int id, boolean completed, String title, int userId) {
         this.id = id;
         this.completed = completed;

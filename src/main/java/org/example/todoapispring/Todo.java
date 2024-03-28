@@ -2,7 +2,7 @@ package org.example.todoapispring;
 
 public class Todo {
     private int id;
-    private boolean completed;
+    private Boolean completed;
     private String title;
     private int userId;
 

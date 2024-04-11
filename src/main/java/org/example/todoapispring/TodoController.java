@@ -55,10 +55,7 @@ public class TodoController {
                 return ResponseEntity.ok(todo);
             }
         }
-        // HW: Along with 404 status code, try to send a json {message: Todo not found}
         //try to send custom a json message Todo not found
-
-
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(TODO_NOT_FOUND);
     }
     /**
@@ -88,29 +85,37 @@ public class TodoController {
      * Api to update a Todo
      * We can update a particular todo by passing the id of the todo
      * @param todoId
-     *
+     * @RequestBody
      * @return
      * * */
     @PatchMapping("/{todoId}")
-    public ResponseEntity<?> updateTodoById(@PathVariable Long todoId, @RequestBody Todo updatedTodo){
+    public ResponseEntity<?> updateTodoById(@PathVariable Long todoId, @RequestBody Todo updatedTodo) {
+        if (updatedTodo == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Updated todo cannot be null");
+        }
+
         Todo todoToUpdate = null;
-        for(Todo todo: todoList){
-            if(todo.getId() == todoId){
+        for (Todo todo : todoList) {
+            if (todo.getId()== todoId) {
                 todoToUpdate = todo;
                 break;
             }
         }
-        if(todoToUpdate != null){
-            if(updatedTodo.getTitle() != null) {
+
+        if (todoToUpdate != null) {
+            if (updatedTodo.getTitle() != null) {
                 todoToUpdate.setTitle(updatedTodo.getTitle());
             }
-            if(updatedTodo.getUserId() != 0) {
+            if (updatedTodo.getUserId() != null){
                 todoToUpdate.setUserId(updatedTodo.getUserId());
             }
-            todoToUpdate.setCompleted(updatedTodo.isCompleted());
+            if (updatedTodo.isCompleted() != null) {
+                todoToUpdate.setCompleted(updatedTodo.isCompleted());
+            }
             return ResponseEntity.ok(todoToUpdate);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(TODO_NOT_FOUND);
         }
     }
+
 }
